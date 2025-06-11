@@ -11,12 +11,39 @@ app.post("/webhook", (req, res) => {
   if (intent === "order_summary") {
     let summary = "🧾 Your order summary:\n";
 
-    if (parameters.pizza_qty) summary += `🍕 ${parameters.pizza_typee} ${parameters.pizza_qty} Pizza(s)\n`;
-    if (parameters.burger_qty) summary += `🍔 ${parameters.burger_typee} ${parameters.burger_qty} Burger(s)\n`;
-    if (parameters.biryani_qty) summary += `🍛 ${parameters.biryani_typee} ${parameters.biryani_qty} Biryani(s)\n`;
-    if (parameters.drink_qty) summary += `🥤 ${parameters.drink_typee} ${parameters.drink_qty} Cold drink(s)\n`;
+    if (parameters.pizza_qty)
+      summary += `🍕 ${parameters.pizza_typee} ${parameters.pizza_qty} Pizza(s)\n`;
+    if (parameters.burger_qty)
+      summary += `🍔 ${parameters.burger_typee} ${parameters.burger_qty} Burger(s)\n`;
+    if (parameters.biryani_qty)
+      summary += `🍛 ${parameters.biryani_typee} ${parameters.biryani_qty} Biryani(s)\n`;
+    if (parameters.drink_qty)
+      summary += `🥤 ${parameters.drink_typee} ${parameters.drink_qty} Cold drink(s)\n`;
 
-    return res.json({ fulfillmentText: summary.trim() });
+    return res.json({
+      fulfillmentMessages: [
+        {
+          text: {
+            text: [summary.trim()],
+          },
+        },
+        {
+          payload: {
+            richContent: [
+              [
+                {
+                  type: "chips",
+                  options: [
+                    { text: "Another order" },
+                    { text: "Checkout" }
+                  ],
+                }
+              ]
+            ]
+          }
+        }
+      ]
+    });
   }
 
   // Fallback default response
